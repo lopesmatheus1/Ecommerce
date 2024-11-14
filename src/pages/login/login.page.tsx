@@ -1,9 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+//utilities
 import { FiLogIn } from 'react-icons/fi'
 import { BsGoogle } from 'react-icons/bs'
+import { useForm } from 'react-hook-form'
+import validator from 'validator'
+
 
 //components
 import CustomButton from '../../components/custom-button/custom-button'
 import Header from '../../components/header/header'
+import InputErrorMessage from '../../components/input-errror-message/input-errror-message.component'
+import CustomInput from '../../components/custom-input/custom-input.component'
 
 //styles
 import {
@@ -13,9 +22,20 @@ import {
   LoginInputContainer,
   LoginSubtitle,
 } from './login.styles'
-import CustomInput from '../../components/custom-input/custom-input.component'
 
 const LoginPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+
+  const handleSubmitPress = (data: any) => {
+    console.log(data)
+  }
+
+  console.log({ errors })
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
       <Header />
@@ -31,14 +51,42 @@ const LoginPage = () => {
 
           <LoginInputContainer>
             <p>Email</p>
-            <CustomInput placeholder="Digite seu email" hasError={true} />
-          </LoginInputContainer>
-          <LoginInputContainer>
-            <p>Senha</p>
-            <CustomInput placeholder="Digite sua senha" />
+            <CustomInput
+              {...register('email', {
+                required: true,
+                validate: (value) => {
+                  return validator.isEmail(value)
+                },
+              })}
+              placeholder="Digite seu email"
+              hasError={!!errors?.email}
+            />
+            {errors.email?.type === 'required' && (
+              <InputErrorMessage>O email é obrigatório</InputErrorMessage>
+            )}
+            {errors.email?.type === 'validate' && (
+              <InputErrorMessage>Digite um e-mail válido</InputErrorMessage>
+            )}
           </LoginInputContainer>
 
-          <CustomButton startIcon={<FiLogIn />}>Entrar</CustomButton>
+          <LoginInputContainer>
+            <p>Senha</p>
+            <CustomInput
+              {...register('password', { required: true })}
+              placeholder="Digite sua senha"
+              hasError={!!errors?.password}
+            />
+            {errors.password?.type === 'required' && (
+              <InputErrorMessage>A senha é obrigatória</InputErrorMessage>
+            )}
+          </LoginInputContainer>
+
+          <CustomButton
+            onClick={() => handleSubmit(handleSubmitPress)()}
+            startIcon={<FiLogIn />}
+          >
+            Entrar
+          </CustomButton>
         </LoginContent>
       </LoginContainer>
     </div>
