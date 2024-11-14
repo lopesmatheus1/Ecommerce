@@ -7,7 +7,7 @@
 
 #root {
   display: flex;
-  flex-direciton: column;
+  flex-direction: column;
   height: 100%;
 }
 

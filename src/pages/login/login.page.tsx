@@ -1,12 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 //utilities
 import { FiLogIn } from 'react-icons/fi'
 import { BsGoogle } from 'react-icons/bs'
 import { useForm } from 'react-hook-form'
 import validator from 'validator'
-
 
 //components
 import CustomButton from '../../components/custom-button/custom-button'
@@ -23,6 +19,8 @@ import {
   LoginSubtitle,
 } from './login.styles'
 
+
+
 const LoginPage = () => {
   const {
     register,
@@ -34,10 +32,8 @@ const LoginPage = () => {
     console.log(data)
   }
 
-  console.log({ errors })
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Header />
       <LoginContainer>
         <LoginContent>
@@ -72,6 +68,7 @@ const LoginPage = () => {
           <LoginInputContainer>
             <p>Senha</p>
             <CustomInput
+              type="password"
               {...register('password', { required: true })}
               placeholder="Digite sua senha"
               hasError={!!errors?.password}
@@ -83,7 +80,7 @@ const LoginPage = () => {
 
           <CustomButton
             onClick={() => handleSubmit(handleSubmitPress)()}
-            startIcon={<FiLogIn />}
+            startIcon={<FiLogIn size={18} />}
           >
             Entrar
           </CustomButton>
