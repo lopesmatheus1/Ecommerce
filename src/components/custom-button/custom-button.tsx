@@ -1,4 +1,4 @@
-import { CustomButtonContainer } from './custom-button.styles'
+import { CustomButtonContainer, IconContainer } from './custom-button.styles'
 
 import { FunctionComponent, ReactNode } from 'react'
 
@@ -13,7 +13,7 @@ const CustomButton: FunctionComponent<CustomButtonProps> = ({
 }) => {
   return (
     <CustomButtonContainer>
-      {startIcon}
+      {startIcon && <IconContainer>{startIcon}</IconContainer>}
       {children}
     </CustomButtonContainer>
   )
