@@ -1,6 +1,10 @@
 //lib
 import { FiLogIn } from 'react-icons/fi'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import {
+  AuthError,
+  createUserWithEmailAndPassword,
+  AuthErrorCodes,
+} from 'firebase/auth'
 import { addDoc, collection } from 'firebase/firestore'
 
 //styles
@@ -35,6 +39,7 @@ const SignOnPage = () => {
     register,
     handleSubmit,
     watch,
+    setError,
     formState: { errors },
   } = useForm<SignUpForm>()
 
@@ -53,7 +58,11 @@ const SignOnPage = () => {
         email: userCredentials.user.email,
       })
     } catch (error) {
-      console.log(error)
+      const _error = error as AuthError
+
+      if (_error.code === AuthErrorCodes.EMAIL_EXISTS) {
+        return setError('email', { type: 'alreadyInUse' })
+      }
     }
   }
 
@@ -120,6 +129,12 @@ const SignOnPage = () => {
             {errors.email?.type === 'validate' && (
               <InputErrorMessage>O email não é válido</InputErrorMessage>
             )}
+
+            {errors.email?.type === 'alreadyInUse' && (
+              <InputErrorMessage>
+                Este e-mail já está sendo utilizado
+              </InputErrorMessage>
+            )}
           </SignUpInputContainer>
 
           <SignUpInputContainer>
@@ -128,11 +143,17 @@ const SignOnPage = () => {
               hasError={!!errors?.password}
               type="password"
               placeholder="Digite sua senha"
-              {...register('password', { required: true })}
+              {...register('password', { required: true, minLength: 6 })}
             />
             {errors.password?.type === 'required' && (
               <InputErrorMessageContainer>
                 A senha é obrigatório
+              </InputErrorMessageContainer>
+            )}
+
+            {errors.password?.type === 'minLength' && (
+              <InputErrorMessageContainer>
+                A senha precisa ter no mínimo 6 caracteres.
               </InputErrorMessageContainer>
             )}
           </SignUpInputContainer>
@@ -145,6 +166,7 @@ const SignOnPage = () => {
               placeholder="Confirme sua senha"
               {...register('passwordConfirmation', {
                 required: true,
+                minLength: 6,
                 validate: (value) => {
                   return value === watchPassword
                 },
@@ -153,11 +175,16 @@ const SignOnPage = () => {
 
             {errors.passwordConfirmation?.type === 'required' && (
               <InputErrorMessageContainer>
-                A senha é obrigatório
+                A confirmação de senha é obrigatório.
               </InputErrorMessageContainer>
             )}
 
-            {errors.passwordConfirmation?.type === 'Validate' && (
+            {errors.passwordConfirmation?.type === 'minLength' && (
+              <InputErrorMessageContainer>
+                A senha precisa ter no mínimo 6 caracteres.
+              </InputErrorMessageContainer>
+            )}
+            {errors.passwordConfirmation?.type === 'validate' && (
               <InputErrorMessageContainer>
                 As senhas precisam ser iguais
               </InputErrorMessageContainer>
