@@ -18,6 +18,12 @@ import {
   LoginInputContainer,
   LoginSubtitle,
 } from './login.styles'
+import {
+  signInWithEmailAndPassword,
+  AuthErrorCodes,
+  AuthError,
+} from 'firebase/auth'
+import { auth } from '../../config/firebase.config'
 
 interface LoginForm {
   email: string
@@ -28,11 +34,29 @@ const LoginPage = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginForm>()
 
-  const handleSubmitPress = (data: LoginForm) => {
-    console.log(data)
+  const handleSubmitPress = async (data: LoginForm) => {
+    try {
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      )
+
+      console.log(userCredentials)
+    } catch (error) {
+      const _error = error as AuthError
+      console.log(_error)
+
+      if (_error.code === AuthErrorCodes.INVALID_LOGIN_CREDENTIALS) {
+        setError('email', { type: 'WrongEmail' })
+        setError('password', { type: 'WrongPassword' })
+        return
+      }
+    }
   }
 
   return (
@@ -63,6 +87,11 @@ const LoginPage = () => {
             {errors.email?.type === 'required' && (
               <InputErrorMessage>O email é obrigatório</InputErrorMessage>
             )}
+            {errors.email?.type === 'WrongEmail' && (
+              <InputErrorMessage>
+                O e-mail não foi encontrado ou a senha é inválida
+              </InputErrorMessage>
+            )}
             {errors.email?.type === 'validate' && (
               <InputErrorMessage>Digite um e-mail válido</InputErrorMessage>
             )}
@@ -78,6 +107,10 @@ const LoginPage = () => {
             />
             {errors.password?.type === 'required' && (
               <InputErrorMessage>A senha é obrigatória</InputErrorMessage>
+            )}
+
+            {errors.password?.type === 'WrongPassword' && (
+              <InputErrorMessage>O e-mail não foi encontrado ou a senha é inválida</InputErrorMessage>
             )}
           </LoginInputContainer>
 
