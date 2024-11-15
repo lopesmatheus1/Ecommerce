@@ -1,5 +1,7 @@
-//utilities
+//lib
 import { FiLogIn } from 'react-icons/fi'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { addDoc, collection } from 'firebase/firestore'
 
 //styles
 import {
@@ -18,6 +20,8 @@ import Header from '../../components/header/header'
 import InputErrorMessage from '../../components/input-errror-message/input-errror-message.component'
 import { InputErrorMessageContainer } from '../../components/input-errror-message/input-error-message.styles'
 
+//utilities
+import { auth, db } from '../../config/firebase.config'
 interface SignUpForm {
   firstName: string
   lastName: string
@@ -34,8 +38,23 @@ const SignOnPage = () => {
     formState: { errors },
   } = useForm<SignUpForm>()
 
-  const handleSubmitPress = (data: SignUpForm) => {
-    console.log(data)
+  const handleSubmitPress = async (data: SignUpForm) => {
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      )
+
+      await addDoc(collection(db, 'users'), {
+        id: userCredentials.user.uid,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: userCredentials.user.email,
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const watchPassword = watch('password')

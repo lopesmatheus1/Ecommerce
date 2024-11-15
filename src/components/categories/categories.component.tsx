@@ -12,15 +12,16 @@ const Categories = () => {
 
   const fetchCategories = async () => {
     try {
-      const categoriesFromFireStore: Category[] = []
-      const querySnapshopt = await getDocs(
+      const getCategoriesFromFireStore: Category[] = []
+      const querySnapshot = await getDocs(
         collection(db, 'categories').withConverter(categoryConverter)
       )
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      querySnapshopt.forEach((doc: any) => {
-        categoriesFromFireStore.push(doc.data())
+
+      querySnapshot.forEach((doc) => {
+        getCategoriesFromFireStore.push(doc.data())
       })
-      setCategories(categoriesFromFireStore)
+
+      setCategories(getCategoriesFromFireStore)
     } catch (error) {
       console.log(error)
     }
