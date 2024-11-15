@@ -1,8 +1,15 @@
-//utilities
+//lib
 import { FiLogIn } from 'react-icons/fi'
 import { BsGoogle } from 'react-icons/bs'
 import { useForm } from 'react-hook-form'
 import validator from 'validator'
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import {
+  signInWithEmailAndPassword,
+  AuthErrorCodes,
+  AuthError,
+  signInWithPopup,
+} from 'firebase/auth'
 
 //components
 import CustomButton from '../../components/custom-button/custom-button'
@@ -18,12 +25,9 @@ import {
   LoginInputContainer,
   LoginSubtitle,
 } from './login.styles'
-import {
-  signInWithEmailAndPassword,
-  AuthErrorCodes,
-  AuthError,
-} from 'firebase/auth'
-import { auth } from '../../config/firebase.config'
+
+//utilities
+import { auth, db, googleProvider } from '../../config/firebase.config'
 
 interface LoginForm {
   email: string
@@ -59,6 +63,35 @@ const LoginPage = () => {
     }
   }
 
+  const handleLoginWithGooglePress = async () => {
+    try {
+      const userCredentials = await signInWithPopup(auth, googleProvider)
+
+      const users = collection(db, 'users')
+      const querySnaptshot = await getDocs(
+        query(users, where('id', '==', userCredentials.user.uid))
+      )
+
+      const user = querySnaptshot.docs[0]?.data()
+      console.log(userCredentials)
+
+      const firstName = userCredentials.user.displayName?.split(' ')[0]
+      const lastName = userCredentials.user.displayName?.split(' ')[1]
+
+      if (!user) {
+        await addDoc(collection(db, 'users'), {
+          id: userCredentials.user.uid,
+          email: userCredentials.user.email,
+          provider: 'google',
+          firstName,
+          lastName,
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Header />
@@ -66,7 +99,10 @@ const LoginPage = () => {
         <LoginContent>
           <LoginHeadline>Entre com sua conta</LoginHeadline>
 
-          <CustomButton startIcon={<BsGoogle size={18} />}>
+          <CustomButton
+            onClick={handleLoginWithGooglePress}
+            startIcon={<BsGoogle size={18} />}
+          >
             Entrar com o Google
           </CustomButton>
 
@@ -110,7 +146,9 @@ const LoginPage = () => {
             )}
 
             {errors.password?.type === 'WrongPassword' && (
-              <InputErrorMessage>O e-mail não foi encontrado ou a senha é inválida</InputErrorMessage>
+              <InputErrorMessage>
+                O e-mail não foi encontrado ou a senha é inválida
+              </InputErrorMessage>
             )}
           </LoginInputContainer>
 
