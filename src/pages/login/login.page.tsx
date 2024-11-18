@@ -10,7 +10,7 @@ import {
   AuthError,
   signInWithPopup,
 } from 'firebase/auth'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 //components
@@ -18,6 +18,7 @@ import CustomButton from '../../components/custom-button/custom-button'
 import Header from '../../components/header/header'
 import InputErrorMessage from '../../components/input-errror-message/input-errror-message.component'
 import CustomInput from '../../components/custom-input/custom-input.component'
+import Loading from '../../components/loading/loading.component'
 
 //styles
 import {
@@ -44,9 +45,11 @@ const LoginPage = () => {
     setError,
     formState: { errors },
   } = useForm<LoginForm>()
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmitPress = async (data: LoginForm) => {
     try {
+      setIsLoading(true)
       const userCredentials = await signInWithEmailAndPassword(
         auth,
         data.email,
@@ -62,13 +65,15 @@ const LoginPage = () => {
         setError('password', { type: 'WrongPassword' })
         return
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const handleLoginWithGooglePress = async () => {
     try {
+      setIsLoading(true)
       const userCredentials = await signInWithPopup(auth, googleProvider)
-
       const users = collection(db, 'users')
       const querySnaptshot = await getDocs(
         query(users, where('id', '==', userCredentials.user.uid))
@@ -91,6 +96,8 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.log(error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -106,6 +113,7 @@ const LoginPage = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Header />
+      {isLoading && <Loading />}
       <LoginContainer>
         <LoginContent>
           <LoginHeadline>Entre com sua conta</LoginHeadline>

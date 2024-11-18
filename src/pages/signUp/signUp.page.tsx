@@ -6,7 +6,7 @@ import {
   AuthErrorCodes,
 } from 'firebase/auth'
 import { addDoc, collection } from 'firebase/firestore'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 //styles
@@ -25,6 +25,7 @@ import CustomInput from '../../components/custom-input/custom-input.component'
 import Header from '../../components/header/header'
 import InputErrorMessage from '../../components/input-errror-message/input-errror-message.component'
 import { InputErrorMessageContainer } from '../../components/input-errror-message/input-error-message.styles'
+import Loading from '../../components/loading/loading.component'
 
 //utilities
 import { auth, db } from '../../config/firebase.config'
@@ -47,6 +48,7 @@ const SignOnPage = () => {
     formState: { errors },
   } = useForm<SignUpForm>()
 
+  const [isLoading, setIsLoading] = useState(false)
   const { isAuthenticated } = useContext(userContext)
   const navigate = useNavigate()
 
@@ -58,6 +60,7 @@ const SignOnPage = () => {
 
   const handleSubmitPress = async (data: SignUpForm) => {
     try {
+      setIsLoading(true)
       const userCredentials = await createUserWithEmailAndPassword(
         auth,
         data.email,
@@ -76,6 +79,8 @@ const SignOnPage = () => {
       if (_error.code === AuthErrorCodes.EMAIL_EXISTS) {
         return setError('email', { type: 'alreadyInUse' })
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -91,7 +96,7 @@ const SignOnPage = () => {
       }}
     >
       <Header />
-
+      {isLoading && <Loading />}
       <SignUpContainer>
         <SignUpContent>
           <SignUpHeadline>Crie sua conta</SignUpHeadline>
