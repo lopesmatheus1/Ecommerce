@@ -4,7 +4,7 @@ import { CustomInputContainer } from './custom-input.styles'
 import { InputHTMLAttributes } from 'react'
 
 interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  hasError?: boolean
+  $hasError?: boolean
 }
 
 const CustomInput: FunctionComponent<CustomInputProps> = React.forwardRef(

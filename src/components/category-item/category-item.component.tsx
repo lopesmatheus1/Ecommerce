@@ -7,7 +7,7 @@ interface CategoryItemProps {
 
 const CategoryItem = ({ category }: CategoryItemProps) => {
   return (
-    <CategoryItemContainer backgroundImage={category.imageUrl}>
+    <CategoryItemContainer $backgroundImage={category.imageUrl}>
       <CategoryName>{category.displayName}</CategoryName>
     </CategoryItemContainer>
   )
