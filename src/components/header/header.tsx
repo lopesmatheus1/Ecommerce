@@ -14,7 +14,6 @@ import {
 import { signOut } from 'firebase/auth'
 import { auth } from '../../config/firebase.config'
 
-
 import { userContext } from '../../contexts/user.context'
 
 const Header = () => {
@@ -26,9 +25,12 @@ const Header = () => {
   const handleSignOnClick = () => {
     navigate('/signon')
   }
+  const handleLogoClick = () => {
+    navigate('/')
+  }
   return (
     <HeaderContainer>
-      <HeaderTitle>Club Clothing</HeaderTitle>
+      <HeaderTitle onClick={handleLogoClick}>Club Clothing</HeaderTitle>
 
       <HeaderItems>
         <HeaderItem>Explorar</HeaderItem>
