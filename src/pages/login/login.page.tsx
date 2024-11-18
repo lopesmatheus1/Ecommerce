@@ -10,6 +10,8 @@ import {
   AuthError,
   signInWithPopup,
 } from 'firebase/auth'
+import { useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 //components
 import CustomButton from '../../components/custom-button/custom-button'
@@ -28,6 +30,7 @@ import {
 
 //utilities
 import { auth, db, googleProvider } from '../../config/firebase.config'
+import { userContext } from '../../contexts/user.context'
 
 interface LoginForm {
   email: string
@@ -49,7 +52,6 @@ const LoginPage = () => {
         data.email,
         data.password
       )
-
       console.log(userCredentials)
     } catch (error) {
       const _error = error as AuthError
@@ -92,6 +94,15 @@ const LoginPage = () => {
     }
   }
 
+  const navigate = useNavigate()
+  const { isAuthenticated } = useContext(userContext)
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated])
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Header />
@@ -118,7 +129,7 @@ const LoginPage = () => {
                 },
               })}
               placeholder="Digite seu email"
-              hasError={!!errors?.email}
+              $hasError={!!errors?.email}
             />
             {errors.email?.type === 'required' && (
               <InputErrorMessage>O email é obrigatório</InputErrorMessage>
@@ -139,7 +150,7 @@ const LoginPage = () => {
               type="password"
               {...register('password', { required: true })}
               placeholder="Digite sua senha"
-              hasError={!!errors?.password}
+              $hasError={!!errors?.password}
             />
             {errors.password?.type === 'required' && (
               <InputErrorMessage>A senha é obrigatória</InputErrorMessage>

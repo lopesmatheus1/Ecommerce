@@ -6,6 +6,8 @@ import {
   AuthErrorCodes,
 } from 'firebase/auth'
 import { addDoc, collection } from 'firebase/firestore'
+import { useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 //styles
 import {
@@ -26,6 +28,8 @@ import { InputErrorMessageContainer } from '../../components/input-errror-messag
 
 //utilities
 import { auth, db } from '../../config/firebase.config'
+import { userContext } from '../../contexts/user.context'
+
 interface SignUpForm {
   firstName: string
   lastName: string
@@ -42,6 +46,15 @@ const SignOnPage = () => {
     setError,
     formState: { errors },
   } = useForm<SignUpForm>()
+
+  const { isAuthenticated } = useContext(userContext)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated])
 
   const handleSubmitPress = async (data: SignUpForm) => {
     try {
@@ -88,7 +101,7 @@ const SignOnPage = () => {
             <CustomInput
               placeholder="Digite seu nome"
               {...register('firstName', { required: true })}
-              hasError={!!errors?.firstName}
+              $hasError={!!errors?.firstName}
             />
             {errors.firstName?.type === 'required' && (
               <InputErrorMessage>O nome é obrigatório</InputErrorMessage>
@@ -102,7 +115,7 @@ const SignOnPage = () => {
               {...register('lastName', {
                 required: true,
               })}
-              hasError={!!errors?.lastName}
+              $hasError={!!errors?.lastName}
             />
             {errors.lastName?.type === 'required' && (
               <InputErrorMessage>O sobrenome é obrigatório</InputErrorMessage>
@@ -113,7 +126,7 @@ const SignOnPage = () => {
             <p>E-mail</p>
             <CustomInput
               placeholder="Digite seu e-mail"
-              hasError={!!errors?.email}
+              $hasError={!!errors?.email}
               {...register('email', {
                 required: true,
                 validate: (value) => {
@@ -140,7 +153,7 @@ const SignOnPage = () => {
           <SignUpInputContainer>
             <p>Senha</p>
             <CustomInput
-              hasError={!!errors?.password}
+              $hasError={!!errors?.password}
               type="password"
               placeholder="Digite sua senha"
               {...register('password', { required: true, minLength: 6 })}
@@ -161,7 +174,7 @@ const SignOnPage = () => {
           <SignUpInputContainer>
             <p>Confirmação de senha</p>
             <CustomInput
-              hasError={!!errors?.passwordConfirmation}
+              $hasError={!!errors?.passwordConfirmation}
               type="password"
               placeholder="Confirme sua senha"
               {...register('passwordConfirmation', {
