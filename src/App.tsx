@@ -13,6 +13,7 @@ import SignOnPage from './pages/signUp/signUp.page'
 import { auth, db } from './config/firebase.config'
 import { userContext } from './contexts/user.context'
 import { userConverter } from './converters/firebase.converter'
+import Loading from './components/loading/loading.component'
 
 function App() {
   const [isInitializing, setIsInitializing] = useState(true)
@@ -42,7 +43,7 @@ function App() {
     return setIsInitializing(false)
   })
 
-  if (isInitializing) return null
+  if (isInitializing) return <Loading />
 
   return (
     <>
