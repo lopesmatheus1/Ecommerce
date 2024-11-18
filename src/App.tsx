@@ -8,11 +8,14 @@ import { onAuthStateChanged } from 'firebase/auth'
 import HomePage from './pages/home/home'
 import LoginPage from './pages/login/login.page'
 import SignOnPage from './pages/signUp/signUp.page'
+import ExplorePage from './pages/explore/explore.page'
 
 //utilities
 import { auth, db } from './config/firebase.config'
 import { userContext } from './contexts/user.context'
 import { userConverter } from './converters/firebase.converter'
+
+//components
 import Loading from './components/loading/loading.component'
 
 function App() {
@@ -51,9 +54,10 @@ function App() {
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
         <Routes>
-          <Route path="/" element={<HomePage />}></Route>
-          <Route path="/login" element={<LoginPage />}></Route>
-          <Route path="/signon" element={<SignOnPage />}></Route>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signon" element={<SignOnPage />} />
+          <Route path="/explore" element={<ExplorePage />} />
         </Routes>
       </BrowserRouter>
     </>

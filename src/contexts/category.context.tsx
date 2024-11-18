@@ -1,5 +1,5 @@
 //lib
-import { createContext, FunctionComponent, ReactNode, useState } from 'react'
+import { createContext, FunctionComponent, ReactNode, useEffect, useState } from 'react'
 import { collection, getDocs } from 'firebase/firestore'
 
 //utilities
@@ -50,6 +50,10 @@ const CategoryContextProvider: FunctionComponent<
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   return (
     <CategoryContext.Provider
