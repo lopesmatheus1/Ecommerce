@@ -1,50 +1,33 @@
-# React + TypeScript + Vite
+# E-commerce Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Funcionalidades
 
-Currently, two official plugins are available:
+- **Home Page:** Página inicial com apresentação de produtos e categorias.
+- **Autenticação de Usuários:** Login e registro implementados com integração ao Firebase.
+- **Exploração de Produtos:** Permite navegação por diferentes categorias e visualização de detalhes dos produtos.
+- **Validação de Formulários:** Campos de entrada validados em tempo real para garantir dados consistentes.
+- **Componentização Reutilizável:** Construção de componentes estilizados com **styled-components**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Stack Utilizada
 
-## Expanding the ESLint configuration
+- **Frontend:** [React](https://reactjs.org), [Vite](https://vitejs.dev), [TypeScript](https://www.typescriptlang.org), [Styled-Components](https://styled-components.com)
+- **Backend:** [Firebase](https://firebase.google.com)
+- **Outros:** [ESLint](https://eslint.org), [Prettier](https://prettier.io)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 📂 Estrutura do Projeto
 
-- Configure the top-level `parserOptions` property like this:
+- `src/`: Diretório principal do código-fonte.
+  - `components/`: Componentes reutilizáveis.
+  - `config/`: Configurações da aplicação.
+  - `contexts/`: Implementação de Context API para gerenciamento de estado.
+  - `converters/`: Conversão e manipulação de dados.
+  - `pages/`: Páginas principais da aplicação.
+  - `script/`: Scripts utilitários.
+  - `theme/`: Definições de tema e estilos globais.
+  - `types/`: Tipagens TypeScript para o projeto.
+- `App.tsx`: Componente raiz da aplicação.
+- `index.css`: Estilos globais da aplicação.
+- `main.tsx`: Ponto de entrada principal.
+- `vite-env.d.ts`: Configurações do ambiente Vite.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+---
